@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 var config = require('./config');
 
 var businessUserRouter = require('./server/businessUser/businessUserRoutes');
+var packageRouter = require('./server/package/packageRoutes');
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connect(config.dbUrl, config.dbOpts);
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/business', businessUserRouter);
+app.use('/business', packageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

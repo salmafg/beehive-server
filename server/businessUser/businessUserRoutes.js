@@ -1,25 +1,25 @@
 var express = require('express');
 var router = express.Router();
-var businessUser = require('./businessUserController');
+var BusinessUser = require('./businessUserController');
 
 router.get('/', function(req, res) {
     res.send('Beehive');
 });
 
-router.get('/users', businessUser.getAll);
+router.get('/users', BusinessUser.getAll);
 
-router.get('/users/:id', businessUser.get);
+router.get('/users/:id', BusinessUser.get);
 
-router.post('/users', businessUser.create);
+router.post('/users', BusinessUser.create);
 
-router.post('/users/:id', businessUser.update);
+router.post('/users/:id', BusinessUser.update);
 
-router.post('/users/:id/password', businessUser.updatePassword);
+router.post('/users/:id/password', BusinessUser.updatePassword);
 
-router.delete('/users/:id', businessUser.delete);
+router.delete('/users/:id', BusinessUser.delete);
 
-router.post('/users/:id/activate', businessUser.activate);
+router.post('/users/:id/activate', BusinessUser.activate);
 
-router.post('/users/:id/deactivate', businessUser.deactivate);
+router.post('/users/:id/deactivate', BusinessUser.deactivate);
 
 module.exports = router;
