@@ -1,17 +1,21 @@
-var express = require('express');
-var router = express.Router();
-var modelController = require('./projectController');
+module.exports = projectRoutes;
 
-router.get('/', function(req, res) {
-    res.send('Beehive');
-});
+function projectRoutes(passport) {
+    var projectController = require('./projectController');
+    var router = require('express').Router();
+    var unless = require('express-unless');
 
-router.get('/projects', modelController.getAll);
-router.get('/projects/:id', modelController.get);
+    var mw = passport.authenticate('jwt', {session: false});
+    mw.unless = unless;
 
-router.post('/projects', modelController.create);
-router.post('/projects/:id', modelController.update);
+    //middleware
+    router.use(mw.unless({method: ['GET', 'OPTIONS']}));
 
-router.delete('/projects/:id', modelController.delete);
+    router.route('/:project_name/:business_username')
+        .get(projectController.getProject);
 
-module.exports = router;
+    router.route('/:project_name/:business_username/:description/:used_storage/:label_names/:number_of_annotations?')
+        .post(projectController.postProject);
+
+    return router;
+}

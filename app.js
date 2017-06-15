@@ -7,6 +7,7 @@ var config = require('./config');
 var businessUserRouter = require('./server/businessUser/businessUserRoutes');
 var projectRoutes = require('./server/project/projectRoutes');
 var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
+var packageRouter = require('./server/package/packageRoutes');
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connect(config.dbUrl, config.dbOpts);
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/business', businessUserRouter);
 app.use('/project', projectRoutes);
 app.use('/tutorial', tutorialRoutes);
+app.use('/business', packageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
