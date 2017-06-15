@@ -1,31 +1,25 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var Project = mongoose.Schema({
+    business_user: {
+        type: Schema.ObjectId,
+        ref: 'BusinessUser',
+    },
     name: {
         type: String,
-        required: true,
-        unique: true
-    },
-    business_username: {
-        type: String,
-        required: true,
-        unique: true
     },
     description: {
         type: String,
-        required: true
     },
     used_storage: {
         type: Number,
-        required: true
     },
     label_names: {
-        type: String[],
-        required: true
+        type: [String],
     },
     number_of_annotations: {
         type: Number,
-        required: false
     }
 });
 
