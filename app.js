@@ -1,5 +1,6 @@
 const compression = require('compression');
 const bodyParser = require('body-parser');
+var cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -17,6 +18,7 @@ var app = express();
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use('/', workerUserRouter);
 app.use('/business', businessUserRouter);
