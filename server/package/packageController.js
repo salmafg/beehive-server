@@ -32,14 +32,7 @@ module.exports = {
                 package.name = req.body.name ? req.body.name : package.name;
                 package.max_storage = req.body.max_storage ? req.body.max_storage : package.max_storage;
                 package.save(function (err, package) {
-                    if (err) {
-                        if (err.name == 'ValidationError') {
-                            for (var field in err.errors)
-                                return res.status(400).json({ error: err.errors[field].message });
-                        }
-                        if (err.message) return res.status(500).json({ error: err.message });
-                        return res.status(500).json({ error: Error.updateFail('package') });
-                    }
+                    if (err) return res.status(500).json({ error: Error.updateFail('package') });
                     return res.status(200).json({ error: Error.updateSuccess('Package') });
                 });
             }

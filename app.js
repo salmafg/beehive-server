@@ -1,14 +1,16 @@
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const express = require('express');
+const fs = require('fs');
 const mongoose = require('mongoose');
 
 var config = require('./config');
-var businessUserRouter = require('./server/businessUser/businessUserRoutes');
+var businessUserRoutes = require('./server/businessUser/businessUserRoutes');
 var projectRoutes = require('./server/project/projectRoutes');
 var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
-var packageRouter = require('./server/package/packageRoutes');
-var workerUserRouter = require('./server/workerUser/workerUserRoutes');
+var packageRoutes = require('./server/package/packageRoutes');
+var rankRoutes = require('./server/rank/rankRoutes');
+var workerUserRoutes = require('./server/workerUser/workerUserRoutes');
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connect(config.dbUrl, config.dbOpts);
@@ -18,11 +20,12 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/', workerUserRouter);
-app.use('/business', businessUserRouter);
+app.use('/', rankRoutes);
+app.use('/', workerUserRoutes);
+app.use('/business', businessUserRoutes);
 app.use('/project', projectRoutes);
 app.use('/tutorial', tutorialRoutes);
-app.use('/business', packageRouter);
+app.use('/business', packageRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
