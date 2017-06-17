@@ -6,10 +6,10 @@ const mongoose = require('mongoose');
 
 var config = require('./config');
 var businessUserRoutes = require('./server/businessUser/businessUserRoutes');
-var projectRoutes = require('./server/project/projectRoutes');
-var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
 var packageRoutes = require('./server/package/packageRoutes');
+var projectRoutes = require('./server/project/projectRoutes');
 var rankRoutes = require('./server/rank/rankRoutes');
+var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
 var workerUserRoutes = require('./server/workerUser/workerUserRoutes');
 
 mongoose.Promise = global.Promise;
