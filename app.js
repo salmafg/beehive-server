@@ -20,8 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', workerUserRouter);
 app.use('/business', businessUserRouter);
-app.use('/project', projectRoutes);
-app.use('/tutorial', tutorialRoutes);
+app.use('/business', projectRoutes);
+app.use('/business', tutorialRoutes);
 app.use('/business', packageRouter);
 
 // catch 404 and forward to error handler

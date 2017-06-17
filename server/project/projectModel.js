@@ -4,22 +4,22 @@ var Schema = mongoose.Schema;
 var Project = mongoose.Schema({
     business_user: {
         type: Schema.ObjectId,
-        ref: 'BusinessUser',
+        ref: 'BusinessUser'
     },
     name: {
-        type: String,
+        type: String
     },
     description: {
-        type: String,
+        type: String
     },
     used_storage: {
-        type: Number,
+        type: Number
     },
     label_names: {
-        type: [String],
+        type: [String]
     },
     number_of_annotations: {
-        type: Number,
+        type: Number
     }
 });
 
