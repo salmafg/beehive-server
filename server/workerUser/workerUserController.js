@@ -1,26 +1,24 @@
 var bcrypt = require('bcrypt-nodejs');
-var BusinessUser = require('./businessUserModel').model;
+var WorkerUser = require('./workerUserModel').model;
 var Error = require('../../config/error');
 
 module.exports = {
     create: function (req, res) {
-        if (!req.body.full_name || !req.body.email || !req.body.password || !req.body.phone || !req.body.organization)
+        if (!req.body.username || !req.body.email || !req.body.password)
             return res.status(400).json({ error: Error.invalidRequest });
-        BusinessUser.findOne({ email: req.body.email.toLowerCase() }, function (err, user) {
+        WorkerUser.findOne({ username: req.body.username.toLowerCase() }, function (err, user) {
             if (user)
-                return res.status(409).json({ error: 'An account with this email already exists.' });
+                return res.status(409).json({ error: 'Username is already taken.' });
             else {
-                BusinessUser.findOne({ phone: req.body.phone }, function (err, user) {
-                    if (user) return res.status(409).json({ error: 'An account with this phone number already exists.' });
+                WorkerUser.findOne({ email: req.body.email.toLowerCase() }, function (err, user) {
+                    if (user) return res.status(409).json({ error: 'An account with this email already exists.' });
                     else {
-                        var newBusinessUser = new BusinessUser({
-                            full_name: req.body.full_name,
+                        var newWorkerUser = new WorkerUser({
+                            username: req.body.username.toLowerCase(),
                             email: req.body.email.toLowerCase(),
-                            password: req.body.password,
-                            phone: req.body.phone,
-                            organization: req.body.organization
+                            password: req.body.password
                         });
-                        newBusinessUser.save(function (err, user) {
+                        newWorkerUser.save(function (err, worker_user) {
                             if (err) {
                                 if (err.name == 'ValidationError') {
                                     for (var field in err.errors)
@@ -29,7 +27,7 @@ module.exports = {
                                 if (err.message) return res.status(500).json({ error: err.message });
                                 return res.status(500).json({ error: Error.unknownError });
                             }
-                            else return res.status(201).json({ user });
+                            else return res.status(201).json({ worker_user });
                         });
                     }
                 });
@@ -37,41 +35,46 @@ module.exports = {
         });
     },
     activate: function (req, res) {
-        BusinessUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: true }, function (err, user) {
+        WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: true }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else return res.sendStatus(200);
         });
     },
     deactivate: function (req, res) {
-        BusinessUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: false }, function (err, user) {
+        WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: false }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else return res.sendStatus(200);
         });
     },
     update: function (req, res) {
-        BusinessUser.findOne({ _id: req.params.id }, function (err, user) {
+        WorkerUser.findOne({ _id: req.params.id }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else {
-                BusinessUser.findOne({ _id: { $ne: user._id }, email: req.body.email }, function (err, dupl) {
+                WorkerUser.findOne({ _id: { $ne: user._id }, email: req.body.email }, function (err, dupl) {
                     if (err) return res.status(500).json({ error: Error.unknownError });
                     if (dupl) return res.status(409).json({ error: Error.alreadyExists('email') });
                     else {
-                        user.full_name = req.body.full_name ? req.body.full_name : user.full_name;
-                        user.email = req.body.email ? req.body.email.toLowerCase() : user.email;
-                        user.phone = req.body.phone ? req.body.phone : user.phone;
-                        user.save(function (err, user) {
-                            if (err) {
-                                if (err.name == 'ValidationError') {
-                                    for (var field in err.errors)
-                                        return res.status(400).json({ error: err.errors[field].message });
-                                }
-                                if (err.message) return res.status(500).json({ error: err.message });
-                                return res.status(500).json({ error: Error.updateFail('user') });
+                        WorkerUser.findOne({ _id: { $ne: user._id }, username: req.body.username }, function (err, dupl) {
+                            if (err) return res.status(500).json({ error: Error.unknownError });
+                            if (dupl) return res.status(409).json({ error: Error.alreadyExists('username') });
+                            else {
+                                user.username = req.body.username ? req.body.username.toLowerCase() : user.username;
+                                user.email = req.body.email ? req.body.email.toLowerCase() : user.email;
+                                user.save(function (err, worker_user) {
+                                    if (err) {
+                                        if (err.name == 'ValidationError') {
+                                            for (var field in err.errors)
+                                                return res.status(400).json({ error: err.errors[field].message });
+                                        }
+                                        if (err.message) return res.status(500).json({ error: err.message });
+                                        return res.status(500).json({ error: Error.updateFail('user') });
+                                    }
+                                    else return res.status(200).json({ worker_user });
+                                });
                             }
-                            else return res.status(200).json({ user });
                         });
                     }
                 });
@@ -101,20 +104,20 @@ module.exports = {
         }
     },
     get: function (req, res) {
-        BusinessUser.findById(req.params.id).exec(function (err, user) {
+        WorkerUser.findById(req.params.id).exec(function (err, user) {
                 if (err) return res.status(500).json({ error: Error.unknownError });
                 else if (user) return res.status(200).json({ user });
                 else return res.status(404).json({ error: Error.notFound('User') });
             });
     },
     getAll: function (req, res) {
-        BusinessUser.find({}).exec(function (err, users) {
+        WorkerUser.find({}).exec(function (err, worker_users) {
                 if (err) return res.status(500).json({ error: Error.unknownError });
-                else return res.status(200).json({ users });
+                else return res.status(200).json({ worker_users });
             });
     },
     delete: function (req, res) {
-        BusinessUser.findById(req.params.id).exec(function(err, user) {
+        WorkerUser.findById(req.params.id).exec(function(err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) return res.status(404).json({ error: Error.notFound('User') });
             else {

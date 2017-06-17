@@ -1,13 +1,14 @@
-const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
+const express = require('express');
 const mongoose = require('mongoose');
-var config = require('./config');
 
+var config = require('./config');
 var businessUserRouter = require('./server/businessUser/businessUserRoutes');
 var projectRoutes = require('./server/project/projectRoutes');
 var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
 var packageRouter = require('./server/package/packageRoutes');
+var workerUserRouter = require('./server/workerUser/workerUserRoutes');
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connect(config.dbUrl, config.dbOpts);
@@ -17,6 +18,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/', workerUserRouter);
 app.use('/business', businessUserRouter);
 app.use('/project', projectRoutes);
 app.use('/tutorial', tutorialRoutes);
