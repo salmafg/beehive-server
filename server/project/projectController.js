@@ -22,7 +22,7 @@ exports.get = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    if (!req.body.business_user || !req.body.name || !req.body.description || !req.body.label_names)
+    if (!req.body.business_user || !req.body.name || !req.body.description || !req.body.label_names || !req.body.package)
         return res.status(400).json({ error: req.body.name });
    var project = new Project(req.body);
     project.save(function(err, project) {
@@ -48,6 +48,7 @@ exports.update = function(req, res) {
             // TODO: Should we update business_user as well?,
             project.name = req.body.name ? req.body.name : project.name;
             project.description = req.body.description ? req.body.description : project.description;
+            project.package = req.body.package ? req.body.package : project.package;
             project.label_names = req.body.label_names ? req.body.label_names : project.label_names;
             project.number_of_annotations = req.body.number_of_annotations ? req.body.number_of_annotations : project.number_of_annotations;
             project.used_storage = req.body.used_storage ? req.body.used_storage : project.used_storage;

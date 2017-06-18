@@ -18,6 +18,10 @@ var Project = mongoose.Schema({
     label_names: {
         type: [String]
     },
+    package: {
+        type: Schema.ObjectId,
+        ref: 'Package'
+    },
     number_of_annotations: {
         type: Number
     }

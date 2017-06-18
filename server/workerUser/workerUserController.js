@@ -70,7 +70,7 @@ module.exports = {
         });
     },
     update: function (req, res) {
-        WorkerUser.findOne({ _id: req.params.id }, function (err, user) {
+        WorkerUser.findOne({ _id: req.user.id }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else {

@@ -72,11 +72,11 @@ module.exports = {
         });
     },
     update: function (req, res) {
-        BusinessUser.findOne({ _id: req.params.id }, function (err, user) {
+        BusinessUser.findOne({ _id: req.user.id }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else {
-                BusinessUser.findOne({ _id: { $ne: user._id }, email: req.body.email }, function (err, dupl) {
+                BusinessUser.findOne({ _id: { $ne: req.user._id }, email: req.body.email }, function (err, dupl) {
                     if (err) return res.status(500).json({ error: Error.unknownError });
                     if (dupl) return res.status(409).json({ error: Error.alreadyExists('email') });
                     else {
