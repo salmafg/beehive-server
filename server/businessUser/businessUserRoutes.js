@@ -16,6 +16,8 @@ router.put('/profile/:id', BusinessUser.isLoggedIn, BusinessUser.update);
 
 router.put('/profile/:id/password', BusinessUser.isLoggedIn, BusinessUser.updatePassword);
 
+router.get('/profile/:id/projects', BusinessUser.isLoggedIn, BusinessUser.getAssociatedProjects);
+
 router.get('/users', BusinessUser.getAll);
 
 router.delete('/users/:id', BusinessUser.delete);

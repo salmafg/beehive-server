@@ -1,6 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var BusinessUser = require('./businessUserModel').model;
+var Project = require('../project/projectModel').model;
 var Error = require('../../config/error');
 
 module.exports = {
@@ -133,6 +134,12 @@ module.exports = {
                 if (err) return res.status(500).json({ error: Error.unknownError });
                 else return res.status(200).json({ users });
             });
+    },
+    getAssociatedProjects: function (req, res) {
+        Project.find({ business_user: req.user.id }, function(err, projects) {
+            if (err) return res.status(500).json({ error: Error.unknownError });
+            else return res.status(200).json({ projects });
+        });
     },
     delete: function (req, res) {
         BusinessUser.findById(req.params.id).exec(function(err, user) {
