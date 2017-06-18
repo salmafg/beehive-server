@@ -8,7 +8,7 @@ router.get('/ranks/:id', Rank.get);
 
 router.post('/ranks', Rank.create);
 
-router.post('/ranks/:id', Rank.update);
+router.put('/ranks/:id', Rank.update);
 
 router.delete('/ranks/:id', Rank.delete);
 
