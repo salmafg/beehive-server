@@ -1,17 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var modelController = require('./tutorialController');
+var tutorial = require('./tutorialController');
+var businessUser = require('./../businessUser/businessUserController');
 
 router.get('/', function(req, res) {
     res.send('Beehive');
 });
 
-router.get('/tutorials', modelController.getAll);
-router.get('/tutorials/:id', modelController.get);
+router.get('/tutorials', businessUser.isLoggedIn, tutorial.getAll);
+router.get('/tutorials/:id', businessUser.isLoggedIn, tutorial.get);
 
-router.post('/tutorials', modelController.create);
-router.post('/tutorials/:id', modelController.update);
+router.post('/tutorials', businessUser.isLoggedIn, tutorial.create);
+router.put('/tutorials/:id', businessUser.isLoggedIn, tutorial.update);
 
-router.delete('/tutorials/:id', modelController.delete);
+router.delete('/tutorials/:id', businessUser.isLoggedIn, tutorial.delete);
 
 module.exports = router;
