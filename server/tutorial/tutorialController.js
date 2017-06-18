@@ -24,7 +24,11 @@ exports.get = function(req, res) {
 exports.create = function(req, res) {
     if (!req.body.project || !req.body.images || !req.body.description)
         return res.status(400).json({ error: Error.invalidRequest });
-   var tutorial = new Tutorial(req.body);
+    var tutorial = new Tutorial({
+        project: req.body.project,
+        images: req.body.images,
+        description: req.body.description
+    });
     tutorial.save(function(err, tutorial) {
         if (err) {
             if (err.name == 'ValidationError') {
