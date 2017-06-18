@@ -1,4 +1,5 @@
 var bcrypt = require('bcrypt-nodejs');
+var passport = require('passport');
 var WorkerUser = require('./workerUserModel').model;
 var Error = require('../../config/error');
 
@@ -33,6 +34,26 @@ module.exports = {
                 });
             }
         });
+    },
+    authenticate: function (req, res, next) {
+        if (!req.body.email) return res.status(400).json({ error: Error.missingParameter('email') });
+        if (!req.body.password) return res.status(400).json({ error: Error.missingParameter('password') });
+        else {
+            passport.authenticate('worker-local', function (err, user, info) {
+                if (err) return res.status(500).send({ error: Error.unknownError });
+                if (!user) return res.status(400).json({ error: info.message });
+                req.logIn(user, function (err) {
+                    if (err) return next(err);
+                    return res.status(200).json({ user });
+                });
+            })(req, res, next);
+        }
+    },
+    isLoggedIn: function (req, res, next) {
+        if (req.isAuthenticated()) {
+            if (req.user instanceof WorkerUser) return next();
+            else return res.status(403).json({ error: Error.unauthorized });
+        } else return res.status(403).json({ error: Error.unauthorized });
     },
     activate: function (req, res) {
         WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: true }, function (err, user) {

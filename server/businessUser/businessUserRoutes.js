@@ -6,20 +6,22 @@ router.get('/', function(req, res) {
     res.send('Beehive');
 });
 
+router.post('/login', BusinessUser.authenticate);
+
+router.post('/signup', BusinessUser.create);
+
+router.get('/profile/:id', BusinessUser.get);
+
+router.put('/profile/:id', BusinessUser.isLoggedIn, BusinessUser.update);
+
+router.put('/profile/:id/password', BusinessUser.isLoggedIn, BusinessUser.updatePassword);
+
 router.get('/users', BusinessUser.getAll);
-
-router.get('/users/:id', BusinessUser.get);
-
-router.post('/users', BusinessUser.create);
-
-router.post('/users/:id', BusinessUser.update);
-
-router.post('/users/:id/password', BusinessUser.updatePassword);
 
 router.delete('/users/:id', BusinessUser.delete);
 
-router.post('/users/:id/activate', BusinessUser.activate);
+router.put('/users/:id/activate', BusinessUser.activate);
 
-router.post('/users/:id/deactivate', BusinessUser.deactivate);
+router.put('/users/:id/deactivate', BusinessUser.deactivate);
 
 module.exports = router;

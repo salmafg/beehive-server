@@ -1,9 +1,11 @@
 const compression = require('compression');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-var cors = require('cors');
-const express = require('express');
-const fs = require('fs');
 const mongoose = require('mongoose');
+const express = require('express');
+const passport = require('passport');
+const session  = require('express-session');
+const fs = require('fs');
 
 var config = require('./config');
 var businessUserRoutes = require('./server/businessUser/businessUserRoutes');
@@ -21,6 +23,25 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+
+var MongoStore = require('connect-mongo')(session);
+var store = new MongoStore({
+  mongooseConnection: db.connection
+});
+
+// Configuring sessions
+app.use(session({
+  secret: config.sessionSecret,
+  cookie: { maxAge: config.cookieExpiry },
+  store: store,
+  resave: true,
+  saveUninitialized: true
+}));
+
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
 
 app.use('/', rankRoutes);
 app.use('/', workerUserRoutes);

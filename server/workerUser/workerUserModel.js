@@ -18,6 +18,10 @@ var workerUserSchema = new Schema({
         required: true,
         default: 0
     },
+    rank: {
+        type: Schema.ObjectId,
+        ref: 'Rank'
+    },
     credit: {
         type: Number,
         required: true,
