@@ -24,7 +24,13 @@ exports.get = function(req, res) {
 exports.create = function(req, res) {
     if (!req.body.business_user || !req.body.name || !req.body.description || !req.body.label_names || !req.body.package_type)
         return res.status(400).json({ error: req.body.name });
-   var project = new Project(req.body);
+    var project = new Project({
+        name: req.body.name,
+        business_user: req.user.id,
+        description: req.body.description,
+        label_names: req.body.label_names,
+        package_type: req.body.package_type
+    });
     project.save(function(err, project) {
         if (err) {
             if (err.name == 'ValidationError') {
