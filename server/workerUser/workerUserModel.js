@@ -60,6 +60,18 @@ workerUserSchema.path('email').validate(function(email) {
     return emailRegex.test(email);
 }, 'The email entered is invalid.');
 
+// username length validation
+workerUserSchema.path('username').validate(function(username) {
+    var usernameRegex = /^\S{3,15}$/;
+    return usernameRegex.test(username);
+}, 'The username must be between 3 and 15 characters long.');
+
+// username character validation
+workerUserSchema.path('username').validate(function(username) {
+    var usernameRegex = /^[a-zA-Z0-9.\-_]$/;
+    return usernameRegex.test(username);
+}, 'The username may only contain letters, numbers, \'.\' and \'_\'');
+
 // password validation
 workerUserSchema.path('password').validate(function(password) {
     if (!this.isModified('password')) return true;
