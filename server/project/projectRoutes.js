@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
     res.send('Beehive');
 });
 
-router.get('/projects', businessUser.isLoggedIn, project.getAll);
+router.get('/projects', businessUser.isLoggedIn, businessUser.getAssociatedProjects);
 router.get('/projects/:id', businessUser.isLoggedIn, project.get);
 
 router.post('/projects', businessUser.isLoggedIn, project.create);

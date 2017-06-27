@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var BusinessUser = require('./businessUserModel').model;
-var Project = require('../project/projectModel').model;
+var Project = require('../project/projectModel');
 var Error = require('../../config/error');
 
 module.exports = {
