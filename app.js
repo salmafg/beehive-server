@@ -52,7 +52,7 @@ require('./config/passport')(passport);
 app.use('/', rankRoutes);
 app.use('/', workerUserRoutes);
 app.use('/business', businessUserRoutes);
-app.use('/project', projectRoutes);
+app.use('/', projectRoutes);
 app.use('/tutorial', tutorialRoutes);
 app.use('/business', packageRoutes);
 
