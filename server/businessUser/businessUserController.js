@@ -136,7 +136,8 @@ module.exports = {
             });
     },
     getAssociatedProjects: function (req, res) {
-        Project.find({ business_user: req.user.id }, function(err, projects) {
+        Project.find({ business_user: req.user.id }).populate('package')
+        .exec(function(err, projects) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else return res.status(200).json({ projects });
         });

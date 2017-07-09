@@ -2,16 +2,14 @@ var Project = require('./projectModel');
 var Error = require('../../config/error');
 
 exports.getAll = function(req, res) {
-    Project.find(function(err, projects) {
-        if (err)
-            return res.status(500).json({ error: Error.unknownError });
-        else
-            return res.status(200).json({ projects });
+    Project.find({}).populate('package').exec(function(err, projects) {
+        if (err) return res.status(500).json({ error: Error.unknownError });
+        else return res.status(200).json({ projects });
     });
 };
 
 exports.get = function(req, res) {
-    Project.findById(req.params.id).exec(function (err, project) {
+    Project.findById(req.params.id).populate('package').exec(function (err, project) {
         if (err)
             return res.status(500).json({ error: Error.unknownError });
         else if (project)
