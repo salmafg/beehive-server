@@ -68,7 +68,7 @@ workerUserSchema.path('username').validate(function(username) {
 
 // username character validation
 workerUserSchema.path('username').validate(function(username) {
-    var usernameRegex = /^[a-zA-Z0-9.\-_]$/;
+    var usernameRegex = /^[a-zA-Z0-9.\-_]+$/;
     return usernameRegex.test(username);
 }, 'The username may only contain letters, numbers, \'.\' and \'_\'');
 

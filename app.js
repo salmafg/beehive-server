@@ -50,7 +50,7 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 app.use('/', rankRoutes);
-app.use('/', workerUserRoutes);
+app.use('/worker', workerUserRoutes);
 app.use('/business', businessUserRoutes);
 app.use('/', projectRoutes);
 app.use('/tutorial', tutorialRoutes);
