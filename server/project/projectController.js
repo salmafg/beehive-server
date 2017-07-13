@@ -1,6 +1,5 @@
 var Project = require('./projectModel');
 var Error = require('../../config/error');
-var unzip = require('unzip');
 
 exports.getAll = function(req, res) {
     Project.find({}).populate('package').exec(function(err, projects) {
