@@ -1,5 +1,6 @@
 var Project = require('./projectModel');
 var Error = require('../../config/error');
+var unzip = require('unzip');
 
 exports.getAll = function(req, res) {
     Project.find({}).populate('package').exec(function(err, projects) {
@@ -69,6 +70,18 @@ exports.update = function(req, res) {
                 else
                     return res.status(200).json({project});
             });
+        }
+    });
+};
+
+exports.uploadDataSet = function(req, res) {
+    Project.findById(req.params.id).exec(function(err, project) {
+        if (err)
+            return res.status(500).json({ error: Error.unknownError });
+        else if (!project)
+            return res.status(404).json({ error: Error.notFound('Project') });
+        else {
+            
         }
     });
 };
