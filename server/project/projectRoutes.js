@@ -8,10 +8,11 @@ router.get('/', function(req, res) {
 });
 
 router.get('/projects', businessUser.isLoggedIn, businessUser.getAssociatedProjects);
-router.get('/projects/:id', businessUser.isLoggedIn, project.get);
+router.get('/projects/:id', businessUser.isLoggedIn, businessUser.getAssociatedProject);
 
 router.post('/projects', businessUser.isLoggedIn, project.create);
 router.put('/projects/:id', businessUser.isLoggedIn, project.update);
+router.put('/projects/:id/upload', businessUser.isLoggedIn, project.uploadDataSet);
 
 router.delete('/projects/:id', businessUser.isLoggedIn, project.delete);
 

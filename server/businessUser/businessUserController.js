@@ -142,6 +142,14 @@ module.exports = {
             else return res.status(200).json({ projects });
         });
     },
+    getAssociatedProject: function (req, res) {
+        Project.findOne({ business_user: req.user.id, _id: req.params.id }).populate('package')
+        .exec(function(err, project) {
+            if (err) return res.status(500).json({ error: Error.unknownError });
+            else if (!project) return res.status(404).json({ error: Error.notFound('Project') });
+            else return res.status(200).json({ project });
+        });
+    },
     delete: function (req, res) {
         BusinessUser.findById(req.params.id).exec(function(err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
