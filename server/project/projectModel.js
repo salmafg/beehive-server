@@ -1,6 +1,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var imageSchema = new Schema({
+    path: {
+        type: String
+    }
+});
+
 var Project = mongoose.Schema({
     business_user: {
         type: Schema.ObjectId,
@@ -24,6 +30,13 @@ var Project = mongoose.Schema({
     },
     number_of_annotations: {
         type: Number
+    },
+    tutorial: {
+        data: Buffer,
+        content_type: String
+    },
+    images: {
+        type: [imageSchema]
     }
 });
 

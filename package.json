@@ -19,7 +19,8 @@
     "fs": "0.0.1-security",
     "mongoose": "^4.10.4",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "unzip": "^0.1.11"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

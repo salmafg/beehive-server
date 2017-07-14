@@ -1,5 +1,9 @@
 var Project = require('./projectModel');
 var Error = require('../../config/error');
+var async = require('async');
+var fs = require('fs');
+var mongoose = require('mongoose');
+var unzip = require('unzip');
 
 exports.getAll = function(req, res) {
     Project.find({}).populate('package').exec(function(err, projects) {
@@ -49,7 +53,6 @@ exports.update = function(req, res) {
         else if (!project)
             return res.status(404).json({ error: Error.notFound('Project') });
         else {
-            // TODO: Should we update business_user as well?,
             project.name = req.body.name ? req.body.name : project.name;
             project.description = req.body.description ? req.body.description : project.description;
             project.package = req.body.package ? req.body.package : project.package;
@@ -73,14 +76,57 @@ exports.update = function(req, res) {
     });
 };
 
-exports.uploadDataSet = function(req, res) {
-    Project.findById(req.params.id).exec(function(err, project) {
+exports.uploadDataSet = function (req, res) {
+    Project.findById(req.params.id).exec(function (err, project) {
         if (err)
             return res.status(500).json({ error: Error.unknownError });
         else if (!project)
             return res.status(404).json({ error: Error.notFound('Project') });
         else {
-            
+            var read_path = req.body.images;
+            var write_path = './images/' + project.business_user + '/' + project._id;
+            async.waterfall([
+                function (next) {
+                    if (!fs.existsSync('./images')) {
+                        fs.mkdir('./images/', function(){
+                            fs.mkdir('./images/' + project.business_user, function(){
+                                fs.mkdir(write_path, function(){
+                                    next();
+                                });
+                            });
+                        });
+                    } else if (!fs.existsSync('./images/' + project.business_user)) {
+                        fs.mkdir('./images/' + project.business_user, function() {
+                            fs.mkdir(write_path, function(){
+                                next();
+                            });
+                        });
+                    } else if (!fs.existsSync(write_path)) {
+                        fs.mkdir(write_path, function(){
+                            next();
+                        });
+                    }
+                    else next();
+                }, function (next) {
+                    fs.createReadStream(read_path)
+                    .pipe(unzip.Extract({ path: write_path }));
+                    next();
+                }, function () {
+                    fs.readdir(write_path, function (err, filenames) {
+                        if (err) return res.status(500).send(err);
+                        else {
+                            filenames.forEach(function (filename) {
+                                project.images.push({
+                                    path: write_path + '/' + filename
+                                });
+                                project.save(function (err) {
+                                    if (err) return res.status(500).send(err);
+                                });
+                            });
+                            return res.sendStatus(200);
+                        }
+                    });
+                }]);
         }
     });
 };
