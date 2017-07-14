@@ -28,6 +28,10 @@ var Project = mongoose.Schema({
         type: Schema.ObjectId,
         ref: 'Package'
     },
+    images: {
+      type: [Schema.ObjectId],
+      ref: 'Image'
+    },
     number_of_annotations: {
         type: Number
     },
