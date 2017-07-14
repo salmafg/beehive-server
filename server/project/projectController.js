@@ -111,7 +111,7 @@ exports.uploadDataSet = function (req, res) {
                     fs.createReadStream(read_path)
                     .pipe(unzip.Extract({ path: write_path }));
                     next();
-                }, function () {
+                }, function (next) {
                     fs.readdir(write_path, function (err, filenames) {
                         if (err) return res.status(500).send(err);
                         else {
@@ -119,12 +119,14 @@ exports.uploadDataSet = function (req, res) {
                                 project.images.push({
                                     path: write_path + '/' + filename
                                 });
-                                project.save(function (err) {
-                                    if (err) return res.status(500).send(err);
-                                });
                             });
-                            return res.sendStatus(200);
+                            next();
                         }
+                    });
+                }, function() {
+                    project.save(function (err) {
+                        if (err) return res.status(500).send(err);
+                        else return res.sendStatus(200);
                     });
                 }]);
         }
