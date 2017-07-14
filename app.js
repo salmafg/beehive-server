@@ -14,7 +14,7 @@ var projectRoutes = require('./server/project/projectRoutes');
 var rankRoutes = require('./server/rank/rankRoutes');
 var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
 var workerUserRoutes = require('./server/workerUser/workerUserRoutes');
-var imageRoutes = require('./server/workerUser/imageRoutes');
+var imageRoutes = require('./server/image/imageRoutes');
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connect(config.dbUrl, config.dbOpts);
