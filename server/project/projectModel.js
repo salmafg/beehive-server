@@ -13,7 +13,8 @@ var Project = mongoose.Schema({
         ref: 'BusinessUser'
     },
     name: {
-        type: String
+        type: String,
+        unique: true
     },
     description: {
         type: String

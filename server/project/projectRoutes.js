@@ -12,7 +12,6 @@ router.get('/projects/:id', businessUser.isLoggedIn, businessUser.getAssociatedP
 
 router.post('/projects', businessUser.isLoggedIn, project.create);
 router.put('/projects/:id', businessUser.isLoggedIn, project.update);
-router.put('/projects/:id/upload', businessUser.isLoggedIn, project.uploadDataSet);
 
 router.delete('/projects/:id', businessUser.isLoggedIn, project.delete);
 

@@ -1,9 +1,7 @@
 var Project = require('./projectModel');
 var Error = require('../../config/error');
-var async = require('async');
-var fs = require('fs');
+var Helper = require('./projectHelper');
 var mongoose = require('mongoose');
-var unzip = require('unzip');
 
 exports.getAll = function(req, res) {
     Project.find({}).populate('package').exec(function(err, projects) {
@@ -23,9 +21,9 @@ exports.get = function(req, res) {
     });
 };
 
-exports.create = function(req, res) {
-    if (!req.body.business_user || !req.body.name || !req.body.description || !req.body.label_names || !req.body.package)
-        return res.status(400).json({ error: req.body.name });
+exports.create = function (req, res) {
+    if (!req.body.name || !req.body.description || !req.body.label_names || !req.body.package)
+        return res.status(400).json({ error: Error.invalidRequest });
     var project = new Project({
         name: req.body.name,
         business_user: req.user.id,
@@ -33,16 +31,29 @@ exports.create = function(req, res) {
         label_names: req.body.label_names,
         package: req.body.package
     });
-    project.save(function(err, project) {
+    if (req.body.number_of_annotations) project.number_of_annotations = req.body.number_of_annotations;
+    if (req.body.tutorial) project.tutorial = req.body.tutorial;
+    project.save(function (err, project) {
         if (err) {
             if (err.name == 'ValidationError') {
                 for (var field in err.errors)
-                return res.status(400).json({ error: err.errors[field].message });
+                    return res.status(400).json({ error: err.errors[field].message });
             }
             if (err.message)
                 return res.status(500).json({ error: err.message });
             return res.status(500).json({ error: Error.unknownError });
         }
+        else if (req.body.images) {
+            if (!req.body.images.includes('.zip'))
+                return res.status(400).send({ error: Error.invalidRequest});
+            else {
+                Helper.uploadDataSet(req.body.images, project, function (err) {
+                    if (err) return res.status(500).json({ error: err });
+                    else return res.status(200).send(project);
+                });
+            }
+        }
+        else return res.status(200).send(project);
     });
 };
 
@@ -63,7 +74,7 @@ exports.update = function(req, res) {
                 if (err) {
                     if (err.name == 'ValidationError') {
                         for (var field in err.errors)
-                        return res.status(400).json({ error: err.errors[field].message });
+                            return res.status(400).json({ error: err.errors[field].message });
                     }
                     if (err.message)
                         return res.status(500).json({ error: err.message });
@@ -72,63 +83,6 @@ exports.update = function(req, res) {
                 else
                     return res.status(200).json({project});
             });
-        }
-    });
-};
-
-exports.uploadDataSet = function (req, res) {
-    Project.findById(req.params.id).exec(function (err, project) {
-        if (err)
-            return res.status(500).json({ error: Error.unknownError });
-        else if (!project)
-            return res.status(404).json({ error: Error.notFound('Project') });
-        else {
-            var read_path = req.body.images;
-            var write_path = './images/' + project.business_user + '/' + project._id;
-            async.waterfall([
-                function (next) {
-                    if (!fs.existsSync('./images')) {
-                        fs.mkdir('./images/', function(){
-                            fs.mkdir('./images/' + project.business_user, function(){
-                                fs.mkdir(write_path, function(){
-                                    next();
-                                });
-                            });
-                        });
-                    } else if (!fs.existsSync('./images/' + project.business_user)) {
-                        fs.mkdir('./images/' + project.business_user, function() {
-                            fs.mkdir(write_path, function(){
-                                next();
-                            });
-                        });
-                    } else if (!fs.existsSync(write_path)) {
-                        fs.mkdir(write_path, function(){
-                            next();
-                        });
-                    }
-                    else next();
-                }, function (next) {
-                    fs.createReadStream(read_path)
-                    .pipe(unzip.Extract({ path: write_path }));
-                    next();
-                }, function (next) {
-                    fs.readdir(write_path, function (err, filenames) {
-                        if (err) return res.status(500).send(err);
-                        else {
-                            filenames.forEach(function (filename) {
-                                project.images.push({
-                                    path: write_path + '/' + filename
-                                });
-                            });
-                            next();
-                        }
-                    });
-                }, function() {
-                    project.save(function (err) {
-                        if (err) return res.status(500).send(err);
-                        else return res.sendStatus(200);
-                    });
-                }]);
         }
     });
 };
@@ -148,4 +102,4 @@ exports.delete = function(req, res) {
             });
         }
     });
-}
+};
