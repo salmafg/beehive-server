@@ -12,11 +12,11 @@ var activity = new mongoose.Schema({
         type: Date
     },
     project: {
-        type: Schema.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Project'
     },
     workerUser: {
-        type: Schema.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'WorkerUser'
     }
 });
