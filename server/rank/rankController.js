@@ -10,7 +10,7 @@ module.exports = {
             title: req.body.title,
             icon: {
                 data: fs.readFileSync(req.body.icon),
-                content_type: 'image/png'
+                contentType: 'image/png'
             },
             maxPoints: req.body.maxPoints
         });
