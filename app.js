@@ -12,7 +12,6 @@ var businessUserRoutes = require('./server/businessUser/businessUserRoutes');
 var packageRoutes = require('./server/package/packageRoutes');
 var projectRoutes = require('./server/project/projectRoutes');
 var rankRoutes = require('./server/rank/rankRoutes');
-var tutorialRoutes = require('./server/tutorial/tutorialRoutes');
 var workerUserRoutes = require('./server/workerUser/workerUserRoutes');
 
 mongoose.Promise = global.Promise;
@@ -53,7 +52,6 @@ app.use('/', rankRoutes);
 app.use('/worker', workerUserRoutes);
 app.use('/business', businessUserRoutes);
 app.use('/', projectRoutes);
-app.use('/tutorial', tutorialRoutes);
 app.use('/business', packageRoutes);
 
 var port = process.env.PORT || 3000;
