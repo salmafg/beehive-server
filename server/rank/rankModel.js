@@ -9,7 +9,7 @@ var rankSchema = new Schema({
         data: Buffer,
         content_type: String
     },
-    max_points: {
+    maxPoints: {
         type: Number
     }
 });

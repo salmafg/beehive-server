@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt-nodejs');
 const SALT_WORK_FACTOR = 10;
 
 var businessUserSchema = new Schema({
-    full_name: {
+    fullName: {
         type: String
     },
     email: {
@@ -22,7 +22,7 @@ var businessUserSchema = new Schema({
     message: {
         type: String
     },
-    is_activated: {
+    isActivated: {
         type: Boolean,
         required: true,
         default: false

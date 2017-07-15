@@ -6,7 +6,7 @@ var Error = require('../../config/error');
 
 module.exports = {
     create: function (req, res) {
-        if (!req.body.full_name || !req.body.email || !req.body.password || !req.body.phone || !req.body.organization)
+        if (!req.body.fullName || !req.body.email || !req.body.password || !req.body.phone || !req.body.organization)
             return res.status(400).json({ error: Error.invalidRequest });
         BusinessUser.findOne({ email: req.body.email.toLowerCase() }, function (err, user) {
             if (user)
@@ -16,7 +16,7 @@ module.exports = {
                     if (user) return res.status(409).json({ error: 'An account with this phone number already exists.' });
                     else {
                         var newBusinessUser = new BusinessUser({
-                            full_name: req.body.full_name,
+                            fullName: req.body.fullName,
                             email: req.body.email.toLowerCase(),
                             password: req.body.password,
                             phone: req.body.phone,
@@ -59,14 +59,14 @@ module.exports = {
         } else return res.status(403).json({ error: Error.unauthorized });
     },
     activate: function (req, res) {
-        BusinessUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: true }, function (err, user) {
+        BusinessUser.findByIdAndUpdate({ _id: req.params.id }, { isActivated: true }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else return res.sendStatus(200);
         });
     },
     deactivate: function (req, res) {
-        BusinessUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: false }, function (err, user) {
+        BusinessUser.findByIdAndUpdate({ _id: req.params.id }, { isActivated: false }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else return res.sendStatus(200);
@@ -81,7 +81,7 @@ module.exports = {
                     if (err) return res.status(500).json({ error: Error.unknownError });
                     if (dupl) return res.status(409).json({ error: Error.alreadyExists('email') });
                     else {
-                        user.full_name = req.body.full_name ? req.body.full_name : user.full_name;
+                        user.fullName = req.body.fullName ? req.body.fullName : user.fullName;
                         user.email = req.body.email ? req.body.email.toLowerCase() : user.email;
                         user.phone = req.body.phone ? req.body.phone : user.phone;
                         user.save(function (err, user) {
@@ -101,17 +101,17 @@ module.exports = {
         });
     },
     updatePassword: function (req, res) {
-        if (!req.body.old_password) return res.status(400).json({ error: Error.missingParameter('old_password') });
-        if (!req.body.new_password) return res.status(400).json({ error: Error.missingParameter('new_password') });
-        if (!req.body.confirm_password) return res.status(400).json({ error: Error.missingParameter('confirm_password') });
-        else if (req.body.new_password !== req.body.confirm_password)
+        if (!req.body.oldPassword) return res.status(400).json({ error: Error.missingParameter('oldPassword') });
+        if (!req.body.newPassword) return res.status(400).json({ error: Error.missingParameter('newPassword') });
+        if (!req.body.confirmPassword) return res.status(400).json({ error: Error.missingParameter('confirmPassword') });
+        else if (req.body.newPassword !== req.body.confirmPassword)
             return res.status(400).json({ error: Error.confirmPassword });
         else {
-            bcrypt.compare(req.body.old_password, req.user.password, function(err, match) {
+            bcrypt.compare(req.body.oldPassword, req.user.password, function(err, match) {
                 if (err) return res.status(500).json({ error: Error.unknownError });
                 else if (!match) return res.status(400).json({ error: 'Password is incorrect.' });
                 else {
-                    req.user.password = req.body.new_password;
+                    req.user.password = req.body.newPassword;
                     req.user.save(function (err) {
                         if (err && err.errors && err.errors.password.message)
                             return res.status(400).json({ error: err.errors.password.message });
@@ -136,14 +136,14 @@ module.exports = {
             });
     },
     getAssociatedProjects: function (req, res) {
-        Project.find({ business_user: req.user.id }).populate('package')
+        Project.find({ businessUser: req.user.id }).populate('package')
         .exec(function(err, projects) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else return res.status(200).json({ projects });
         });
     },
     getAssociatedProject: function (req, res) {
-        Project.findOne({ business_user: req.user.id, _id: req.params.id }).populate('package')
+        Project.findOne({ businessUser: req.user.id, _id: req.params.id }).populate('package')
         .exec(function(err, project) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!project) return res.status(404).json({ error: Error.notFound('Project') });

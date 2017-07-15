@@ -24,13 +24,13 @@ exports.get = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    if (!req.body.business_user || !req.body.name || !req.body.description || !req.body.label_names || !req.body.package)
+    if (!req.body.businessUser || !req.body.name || !req.body.description || !req.body.labelNames || !req.body.package)
         return res.status(400).json({ error: req.body.name });
     var project = new Project({
         name: req.body.name,
-        business_user: req.user.id,
+        businessUser: req.user.id,
         description: req.body.description,
-        label_names: req.body.label_names,
+        labelNames: req.body.labelNames,
         package: req.body.package
     });
     project.save(function(err, project) {
@@ -56,9 +56,9 @@ exports.update = function(req, res) {
             project.name = req.body.name ? req.body.name : project.name;
             project.description = req.body.description ? req.body.description : project.description;
             project.package = req.body.package ? req.body.package : project.package;
-            project.label_names = req.body.label_names ? req.body.label_names : project.label_names;
-            project.number_of_annotations = req.body.number_of_annotations ? req.body.number_of_annotations : project.number_of_annotations;
-            project.used_storage = req.body.used_storage ? req.body.used_storage : project.used_storage;
+            project.labelNames = req.body.labelNames ? req.body.labelNames : project.labelNames;
+            project.numberOfAnnotations = req.body.numberOfAnnotations ? req.body.numberOfAnnotations : project.numberOfAnnotations;
+            project.usedStorage = req.body.usedStorage ? req.body.usedStorage : project.usedStorage;
             project.save(function (err, project) {
                 if (err) {
                     if (err.name == 'ValidationError') {
@@ -84,19 +84,19 @@ exports.uploadDataSet = function (req, res) {
             return res.status(404).json({ error: Error.notFound('Project') });
         else {
             var read_path = req.body.images;
-            var write_path = './images/' + project.business_user + '/' + project._id;
+            var write_path = './images/' + project.businessUser + '/' + project._id;
             async.waterfall([
                 function (next) {
                     if (!fs.existsSync('./images')) {
                         fs.mkdir('./images/', function(){
-                            fs.mkdir('./images/' + project.business_user, function(){
+                            fs.mkdir('./images/' + project.businessUser, function(){
                                 fs.mkdir(write_path, function(){
                                     next();
                                 });
                             });
                         });
-                    } else if (!fs.existsSync('./images/' + project.business_user)) {
-                        fs.mkdir('./images/' + project.business_user, function() {
+                    } else if (!fs.existsSync('./images/' + project.businessUser)) {
+                        fs.mkdir('./images/' + project.businessUser, function() {
                             fs.mkdir(write_path, function(){
                                 next();
                             });

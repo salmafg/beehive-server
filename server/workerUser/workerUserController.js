@@ -19,7 +19,7 @@ module.exports = {
                             email: req.body.email.toLowerCase(),
                             password: req.body.password
                         });
-                        newWorkerUser.save(function (err, worker_user) {
+                        newWorkerUser.save(function (err, workerUser) {
                             if (err) {
                                 if (err.name == 'ValidationError') {
                                     for (var field in err.errors)
@@ -28,7 +28,7 @@ module.exports = {
                                 if (err.message) return res.status(500).json({ error: err.message });
                                 return res.status(500).json({ error: Error.unknownError });
                             }
-                            else return res.status(201).json({ worker_user });
+                            else return res.status(201).json({ workerUser });
                         });
                     }
                 });
@@ -56,14 +56,14 @@ module.exports = {
         } else return res.status(403).json({ error: Error.unauthorized });
     },
     activate: function (req, res) {
-        WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: true }, function (err, user) {
+        WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { isActivated: true }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else return res.sendStatus(200);
         });
     },
     deactivate: function (req, res) {
-        WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { is_activated: false }, function (err, user) {
+        WorkerUser.findByIdAndUpdate({ _id: req.params.id }, { isActivated: false }, function (err, user) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!user) res.status(404).json({ error: Error.notFound('User') });
             else return res.sendStatus(200);
@@ -84,7 +84,7 @@ module.exports = {
                             else {
                                 user.username = req.body.username ? req.body.username.toLowerCase() : user.username;
                                 user.email = req.body.email ? req.body.email.toLowerCase() : user.email;
-                                user.save(function (err, worker_user) {
+                                user.save(function (err, workerUser) {
                                     if (err) {
                                         if (err.name == 'ValidationError') {
                                             for (var field in err.errors)
@@ -93,7 +93,7 @@ module.exports = {
                                         if (err.message) return res.status(500).json({ error: err.message });
                                         return res.status(500).json({ error: Error.updateFail('user') });
                                     }
-                                    else return res.status(200).json({ worker_user });
+                                    else return res.status(200).json({ workerUser });
                                 });
                             }
                         });
@@ -103,17 +103,17 @@ module.exports = {
         });
     },
     updatePassword: function (req, res) {
-        if (!req.body.old_password) return res.status(400).json({ error: Error.missingParameter('old_password') });
-        if (!req.body.new_password) return res.status(400).json({ error: Error.missingParameter('new_password') });
-        if (!req.body.confirm_password) return res.status(400).json({ error: Error.missingParameter('confirm_password') });
-        else if (req.body.new_password !== req.body.confirm_password)
+        if (!req.body.oldPassword) return res.status(400).json({ error: Error.missingParameter('oldPassword') });
+        if (!req.body.newPassword) return res.status(400).json({ error: Error.missingParameter('newPassword') });
+        if (!req.body.confirmPassword) return res.status(400).json({ error: Error.missingParameter('confirmPassword') });
+        else if (req.body.newPassword !== req.body.confirmPassword)
             return res.status(400).json({ error: Error.confirmPassword });
         else {
-            bcrypt.compare(req.body.old_password, req.user.password, function(err, match) {
+            bcrypt.compare(req.body.oldPassword, req.user.password, function(err, match) {
                 if (err) return res.status(500).json({ error: Error.unknownError });
                 else if (!match) return res.status(400).json({ error: 'Password is incorrect.' });
                 else {
-                    req.user.password = req.body.new_password;
+                    req.user.password = req.body.newPassword;
                     req.user.save(function (err) {
                         if (err && err.errors && err.errors.password.message)
                             return res.status(400).json({ error: err.errors.password.message });
@@ -132,9 +132,9 @@ module.exports = {
             });
     },
     getAll: function (req, res) {
-        WorkerUser.find({}).exec(function (err, worker_users) {
+        WorkerUser.find({}).exec(function (err, workerUsers) {
                 if (err) return res.status(500).json({ error: Error.unknownError });
-                else return res.status(200).json({ worker_users });
+                else return res.status(200).json({ workerUsers });
             });
     },
     delete: function (req, res) {
