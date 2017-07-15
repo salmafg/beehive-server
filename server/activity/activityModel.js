@@ -2,11 +2,13 @@ var mongoose = require('mongoose');
 
 var activity = new mongoose.Schema({
     annotatedImageCount: {
-        type: Number
+        type: Number,
+        default: 0
     },
     credit: {
         type: Number,
-        contentType: String
+        contentType: String,
+        default: 0
     },
     timestamp: {
         type: Date
