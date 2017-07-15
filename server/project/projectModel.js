@@ -35,9 +35,10 @@ var Project = mongoose.Schema({
         data: Buffer,
         content_type: String
     },
-    images: {
-        type: [imageSchema]
-    }
+    images: [{
+        type: Schema.ObjectId,
+        ref: 'Image'
+    }]
 });
 
 module.exports = mongoose.model('Project', Project);
