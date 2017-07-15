@@ -47,6 +47,7 @@ exports.create = function (req, res) {
             if (!req.body.images.includes('.zip'))
                 return res.status(400).send({ error: Error.invalidRequest});
             else {
+                console.log("before projectController Helper.uploadDataSet")
                 Helper.uploadDataSet(req.body.images, project, function (err) {
                     if (err) return res.status(500).json({ error: err });
                     else return res.status(200).send(project);

@@ -5,6 +5,5 @@ module.exports = {
         pass: process.env.BEEHIVE_DB_PASS || 'bHive2017'
     },
     sessionSecret: 'jwkhf!WCRWCwadnq#@RAGEQcqc3rvq#Rqwrvq',
-    cookieExpiry: 2592000000,
-    S3BucketName: 'beehive-img'
+    cookieExpiry: 2592000000
 };
