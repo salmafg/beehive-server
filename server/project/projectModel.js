@@ -1,11 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var imageSchema = new Schema({
-    path: {
-        type: String
-    }
-});
 
 var Project = mongoose.Schema({
     businessUser: {
