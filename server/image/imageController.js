@@ -7,6 +7,7 @@ AWS.config.loadFromPath('../../config/aws.json');
 var s3Bucket = new AWS.S3( { params: {Bucket: config.S3BucketName} } )
 
 exports.create = function(imageName, imageFile) {
+    // TODO: figure out how to send data to AWS
     var data = {Key: imageName, Body: imageFile};
     s3Bucket.putObject(data, function(err, data) {
         if (err) {
