@@ -3,19 +3,19 @@ var fs = require('fs');
 var unzip = require('unzip');
 
 exports.uploadDataSet = function (read_path, project, callback) {
-    var write_path = './images/' + project.business_user + '/' + project._id;
+    var write_path = './images/' + project.businessUser + '/' + project._id;
     async.waterfall([
         function (next) {
             if (!fs.existsSync('./images')) {
                 fs.mkdir('./images/', function(){
-                    fs.mkdir('./images/' + project.business_user, function(){
+                    fs.mkdir('./images/' + project.businessUser, function(){
                         fs.mkdir(write_path, function(){
                             next();
                         });
                     });
                 });
-            } else if (!fs.existsSync('./images/' + project.business_user)) {
-                fs.mkdir('./images/' + project.business_user, function() {
+            } else if (!fs.existsSync('./images/' + project.businessUser)) {
+                fs.mkdir('./images/' + project.businessUser, function() {
                     fs.mkdir(write_path, function(){
                         next();
                     });
