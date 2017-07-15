@@ -26,9 +26,9 @@ exports.create = function (req, res) {
         return res.status(400).json({ error: Error.invalidRequest });
     var project = new Project({
         name: req.body.name,
-        business_user: req.user.id,
+        businessUser: req.user.id,
         description: req.body.description,
-        label_names: req.body.label_names,
+        labelNames: req.body.labelNames,
         package: req.body.package
     });
     if (req.body.number_of_annotations) project.number_of_annotations = req.body.number_of_annotations;
@@ -67,9 +67,9 @@ exports.update = function(req, res) {
             project.name = req.body.name ? req.body.name : project.name;
             project.description = req.body.description ? req.body.description : project.description;
             project.package = req.body.package ? req.body.package : project.package;
-            project.label_names = req.body.label_names ? req.body.label_names : project.label_names;
-            project.number_of_annotations = req.body.number_of_annotations ? req.body.number_of_annotations : project.number_of_annotations;
-            project.used_storage = req.body.used_storage ? req.body.used_storage : project.used_storage;
+            project.labelNames = req.body.labelNames ? req.body.labelNames : project.labelNames;
+            project.numberOfAnnotations = req.body.numberOfAnnotations ? req.body.numberOfAnnotations : project.numberOfAnnotations;
+            project.usedStorage = req.body.usedStorage ? req.body.usedStorage : project.usedStorage;
             project.save(function (err, project) {
                 if (err) {
                     if (err.name == 'ValidationError') {

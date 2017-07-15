@@ -3,8 +3,8 @@ var Error = require('../../config/error');
 
 module.exports = {
     create: function(req, res) {
-        if (!req.body.name || !req.body.max_storage) return res.status(400).json({ error: Error.invalidRequest });
-        Package.create({ name: req.body.name, max_storage: req.body.max_storage },
+        if (!req.body.name || !req.body.maxStorage) return res.status(400).json({ error: Error.invalidRequest });
+        Package.create({ name: req.body.name, maxStorage: req.body.maxStorage },
          function(err, package) {
             if (err) return res.status(409).json({ error: Error.unknownError });
             else if (package) return res.status(201).json({ package });
@@ -30,7 +30,7 @@ module.exports = {
             else if (!package) return res.status(400).json({ error: Error.notFound('Package') });
             else {
                 package.name = req.body.name ? req.body.name : package.name;
-                package.max_storage = req.body.max_storage ? req.body.max_storage : package.max_storage;
+                package.maxStorage = req.body.maxStorage ? req.body.maxStorage : package.maxStorage;
                 package.save(function (err, package) {
                     if (err) return res.status(500).json({ error: Error.updateFail('package') });
                     return res.status(200).json({ error: Error.updateSuccess('Package') });

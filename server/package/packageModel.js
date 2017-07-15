@@ -5,7 +5,7 @@ var packageSchema = new Schema({
     name: {
         type: String
     },
-    max_storage: {
+    maxStorage: {
         type: String
     }
 });

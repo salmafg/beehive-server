@@ -8,7 +8,7 @@ var imageSchema = new Schema({
 });
 
 var Project = mongoose.Schema({
-    business_user: {
+    businessUser: {
         type: Schema.ObjectId,
         ref: 'BusinessUser'
     },
@@ -19,17 +19,17 @@ var Project = mongoose.Schema({
     description: {
         type: String
     },
-    used_storage: {
+    usedStorage: {
         type: Number
     },
-    label_names: {
+    labelNames: {
         type: [String]
     },
     package: {
         type: Schema.ObjectId,
         ref: 'Package'
     },
-    number_of_annotations: {
+    numberOfAnnotations: {
         type: Number
     },
     tutorial: {

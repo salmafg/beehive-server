@@ -27,22 +27,22 @@ var workerUserSchema = new Schema({
         required: true,
         default: 0
     },
-    is_reviewer: {
+    isReviewer: {
         type: Boolean,
         required: true,
         default: false
     },
-    total_annotations_count: {
+    totalAnnotationsCount: {
         type: Number,
         required: true,
         default: 0
     },
-    current_payable_credit: {
+    currentPayableCredit: {
         type: Number,
         required: true,
         default: 0
     },
-    is_activated: {
+    isActivated: {
         type: Boolean,
         required: true,
         default: true
