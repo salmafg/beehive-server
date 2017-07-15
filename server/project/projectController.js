@@ -31,7 +31,7 @@ exports.create = function (req, res) {
         labelNames: req.body.labelNames,
         package: req.body.package
     });
-    if (req.body.number_of_annotations) project.number_of_annotations = req.body.number_of_annotations;
+    if (req.body.numberOfAnnotations) project.numberOfAnnotations = req.body.number_of_annotations;
     if (req.body.tutorial) project.tutorial = req.body.tutorial;
     project.save(function (err, project) {
         if (err) {
