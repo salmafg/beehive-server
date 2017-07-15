@@ -7,7 +7,7 @@ var rankSchema = new Schema({
     },
     icon: {
         data: Buffer,
-        content_type: String
+        contentType: String
     },
     maxPoints: {
         type: Number

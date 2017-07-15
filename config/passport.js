@@ -30,7 +30,7 @@ module.exports = function (passport) {
                         else if (!res) return done(null, false, { message: 'Oops! The password entered is incorrect.' });
                         else {
                             user.save(function () {
-                                return done(null, user, { message: 'Welcome ' + user.full_name });
+                                return done(null, user, { message: 'Welcome ' + user.fullName });
                             });
                         }
                     });
@@ -50,7 +50,7 @@ module.exports = function (passport) {
                 if (!user)
                     return done(null, false, { message: 'This email does not exist.' });
                 else {
-                    if (!user.is_activated) done(null, false, { message: 'Sorry, your account has been deactivated.' });
+                    if (!user.isActivated) done(null, false, { message: 'Sorry, your account has been deactivated.' });
                     else {
                         user.validatePassword(password, function (err, res) {
                             if (err) return done(null, false, { message: 'An error has occurred.' });
