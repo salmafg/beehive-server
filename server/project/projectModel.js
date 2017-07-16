@@ -8,8 +8,7 @@ var Project = mongoose.Schema({
         ref: 'BusinessUser'
     },
     name: {
-        type: String,
-        unique: true
+        type: String
     },
     description: {
         type: String
@@ -31,10 +30,10 @@ var Project = mongoose.Schema({
         data: Buffer,
         content_type: String
     },
-    images: [{
-        type: Schema.ObjectId,
+    images: {
+        type: [Schema.ObjectId],
         ref: 'Image'
-    }]
+    }
 });
 
 module.exports = mongoose.model('Project', Project);
