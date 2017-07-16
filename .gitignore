@@ -59,4 +59,5 @@ typings/
 
 .vs/
 
-config/aws.json
+config/awsConfig.js
+images/
