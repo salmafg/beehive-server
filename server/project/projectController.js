@@ -103,3 +103,19 @@ exports.delete = function(req, res) {
         }
     });
 };
+
+exports.dispatch = function(req, res) {
+    Project.aggregate({ $sample: {size:1} }, function(err, data) {
+        if (err) {
+            return res.status(500).json({ error: Error.unknownError })
+        } else {
+            var project;
+            if (data.length > 0) {
+                project = data[0]
+            } else {
+                return res.status(404).json({ error: Error.notFound('Project') });
+            }
+            return res.status(200).json({project});
+        }
+    })
+}
