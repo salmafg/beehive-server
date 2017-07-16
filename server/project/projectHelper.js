@@ -41,7 +41,6 @@ exports.uploadDataSet = function (read_path, project, callback) {
                 if (err) return callback(err);
                 else {
                     filenames.forEach(function (filename) {
-                        console.log(filename);
                         var image = new Image(function(err, image) {
                             project.images.push(image);
                         });
