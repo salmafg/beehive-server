@@ -2,6 +2,7 @@ var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var BusinessUser = require('./businessUserModel').model;
 var Project = require('../project/projectModel');
+var Activity = require('../activity/activityModel').model;
 var Error = require('../../config/error');
 
 module.exports = {
@@ -148,6 +149,21 @@ module.exports = {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!project) return res.status(404).json({ error: Error.notFound('Project') });
             else return res.status(200).json({ project });
+        });
+    },
+    getProjectActivities: function (req, res) {
+        Activity.find({ project: req.params.pid }).populate('workerUser')
+        .exec(function(err, activities) {
+            if (err) return res.status(500).json({ error: Error.unknownError });
+            else return res.status(200).json({ activities });
+        });
+    },
+    getProjectActivity: function (req, res) {
+        Activity.findById(req.params.aid).populate('workerUser')
+        .exec(function(err, activity) {
+            if (err) return res.status(500).json({ error: Error.unknownError });
+            else if (!activity) return res.status(404).json({ error: Error.notFound('Activity') });
+            else return res.status(200).json({ activity });
         });
     },
     delete: function (req, res) {
