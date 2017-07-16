@@ -1,4 +1,5 @@
 var Image = require('../image/imageModel');
+// var ImageController = require('../image/imageController');
 var async = require('async');
 var fs = require('fs');
 var unzip = require('unzip');
@@ -41,9 +42,14 @@ exports.uploadDataSet = function (read_path, project, callback) {
                 if (err) return callback(err);
                 else {
                     filenames.forEach(function (filename) {
-                        var image = new Image(function(err, image) {
-                            project.images.push(image);
-                        });
+                         var imagePath = write_path + '/' + filename;
+                            // ImageController.create(imagePath, filename, function(err, image) {
+                            //     if (err) return callback(err);
+                            //     console.log("IMAGE SUCCESSFULLY SAVED:");
+                            //     project.images.push({
+                            //         path: write_path + '/' + filename
+                            //     });
+                            // });
                     });
                     next();
                 }
