@@ -1,19 +1,37 @@
+var Uploader = require('s3-image-uploader');
 var Image = require('./imageModel');
-var config = require('../../config');
-var AWS = require('aws-sdk');
+var awsConfig = require('../../config/awsConfig');
 
-AWS.config.loadFromPath('../../config/aws.json');
+var uploader = new Uploader({
+  aws: {
+    key : awsConfig.accessKeyId,
+    secret : awsConfig.secretAccessKey
+  },
+  websockets: false
+});
 
-var s3Bucket = new AWS.S3( { params: {Bucket: config.S3BucketName} } )
-
-exports.create = function(imageName, imageFile) {
-    // TODO: figure out how to send data to AWS
-    var data = {Key: imageName, Body: imageFile};
-    s3Bucket.putObject(data, function(err, data) {
-        if (err) {
-            console.log('Error uploading data: ', data, err); 
-        } else {
-            console.log('succesfully uploaded the image!', data, err);
+exports.create = function(imagePath, fileName, next) {
+    var image = new Image();
+    console.log("imageController.create");
+    image.save(function(err, image) {
+        if (err) return next(err);
+        else {
+            console.log("before uploader.upload");
+            uploader.upload({
+                fileId: image._id,
+                bucket: awsConfig.bucketName,
+                source: imagePath,
+                name: image._id + "__" + fileName
+            }, function(data) {
+                console.log('upload success:', data);
+                image.path = data.path;
+                image.save(function(err, image) {
+                    next(null, image._id);
+                });
+            }, function(errMsg, errObject) {
+                console.error('unable to upload: ' + errMsg + ':', errObject);
+                next(err);
+            });
         }
-    });
+    })
 }

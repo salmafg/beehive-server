@@ -1,11 +1,12 @@
 var Image = require('../image/imageModel');
-// var ImageController = require('../image/imageController');
+var ImageController = require('../image/imageController');
 var async = require('async');
 var fs = require('fs');
 var unzip = require('unzip');
 
 exports.uploadDataSet = function (read_path, project, callback) {
     var write_path = './images/' + project._id;
+    var imageIds = [];
     async.waterfall([
         function (next) {
             if (!fs.existsSync('./images')) {
@@ -43,21 +44,18 @@ exports.uploadDataSet = function (read_path, project, callback) {
                 else {
                     filenames.forEach(function (filename) {
                          var imagePath = write_path + '/' + filename;
-                            // ImageController.create(imagePath, filename, function(err, image) {
-                            //     if (err) return callback(err);
-                            //     console.log("IMAGE SUCCESSFULLY SAVED:");
-                            //     project.images.push({
-                            //         path: write_path + '/' + filename
-                            //     });
-                            // });
+                            ImageController.create(imagePath, filename, function(err, imageId) {
+                                if (err) return callback(err);
+                                console.log("IMAGE SUCCESSFULLY SAVED: ", imageId);
+                                project.images.push(imageId);
+                                project.save(function (err) {
+                                    if (err) return callback(err);
+                                });
+                                
+                            });
                     });
-                    next();
+                    return callback(null, project);
                 }
-            });
-        }, function() {
-            project.save(function (err) {
-                if (err) return callback(err);
-                else return callback(null, project);
             });
         }]);
 };
