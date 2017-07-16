@@ -57,7 +57,7 @@ exports.uploadDataSet = function (read_path, project, callback) {
         }, function() {
             project.save(function (err) {
                 if (err) return callback(err);
-                else return callback();
+                else return callback(null, project);
             });
         }]);
 };

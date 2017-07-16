@@ -47,13 +47,21 @@ exports.create = function (req, res) {
             if (!req.body.images.includes('.zip'))
                 return res.status(400).send({ error: Error.invalidRequest});
             else {
-                Helper.uploadDataSet(req.body.images, project, function (err) {
+                Helper.uploadDataSet(req.body.images, project, function (err, project) {
                     if (err) return res.status(500).json({ error: err });
-                    else return res.status(200).send(project);
+                    else {
+                        project.populate('package', function(err, project){
+                            return res.status(200).send(project);
+                        });
+                    }
                 });
             }
         }
-        else return res.status(200).send(project);
+        else {
+            project.populate('package', function(err, project){
+                return res.status(200).send(project);
+            });
+        }
     });
 };
 
