@@ -25,7 +25,8 @@ exports.get = function(req, res) {
 };
 
 exports.create = function (req, res) {
-    if (!req.body.name || !req.body.labelNames || !req.body.package)
+    if (!req.body.name || !req.body.labelNames || !req.body.package ||
+         (req.body.images.length > 0 && !req.body.images.includes('.zip')))
         return res.status(400).json({ error: Error.invalidRequest });
     Project.findOne({ businessUser: req.user.id, name: req.body.name }, function(err, dupl) {
         if (err) return res.status(500).json({ error: Error.unknownError });
@@ -42,19 +43,15 @@ exports.create = function (req, res) {
             if (req.body.tutorial) project.tutorial = req.body.tutorial;
             project.save(function (err, project) {
                 if (err) return res.status(500).json({ error: err.message });
-                else if (req.body.images) {
-                    if (!req.body.images.includes('.zip'))
-                        return res.status(400).send({ error: Error.invalidRequest});
-                    else {
-                        Helper.uploadDataSet(req.body.images, project, function (err, project) {
-                            if (err) return res.status(500).json({ error: err });
-                            else {
-                                project.populate(projectPopulate, function(err, project){
-                                    return res.status(200).send(project);
-                                });
-                            }
-                        });
-                    }
+                else if (req.body.images.length > 0) {
+                    Helper.uploadDataSet(req.body.images, project, function (err, project) {
+                        if (err) return res.status(500).json({ error: err });
+                        else {
+                            project.populate(projectPopulate, function(err, project){
+                                return res.status(200).send(project);
+                            });
+                        }
+                    });
                 }
                 else {
                     project.populate(projectPopulate, function(err, project){
