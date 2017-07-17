@@ -2,17 +2,20 @@ var Rank = require('./rankModel').model;
 var Error = require('../../config/error');
 var fs = require('fs');
 
+
 module.exports = {
     create: function(req, res) {
-        if (!req.body.title || !req.body.icon || !req.body.maxPoints)
+        if (!req.body.title || !req.body.icon || !req.body.maxPoints || !req.body.index)
             return res.status(400).json({ error: Error.invalidRequest });
         var rank = new Rank({
             title: req.body.title,
+            index:     req.body.index,
+            maxPoints: req.body.maxPoints,
             icon: {
                 data: fs.readFileSync(req.body.icon),
                 contentType: 'image/png'
-            },
-            maxPoints: req.body.maxPoints
+            }
+            
         });
         rank.save(rank, function(err, rank) {
             if (err) return res.status(409).json({ error: Error.unknownError });
@@ -41,6 +44,7 @@ module.exports = {
                 rank.title = req.body.name ? req.body.name : rank.name;
                 rank.icon.data = req.body.icon.data ? fs.readFile(req.body.icon) : rank.icon.data;
                 rank.maxPoints = req.body.maxPoints ? req.body.maxPoints : rank.maxPoints;
+                rank.index = req.body.index ? req.body.index : rank.index;
                 rank.save(function (err, rank) {
                     if (err) return res.status(500).json({ error: Error.updateFail('rank') });
                     return res.status(200).json({ error: Error.updateSuccess('Rank') });

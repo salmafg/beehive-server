@@ -2,6 +2,7 @@ var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var WorkerUser = require('./workerUserModel').model;
 var Error = require('../../config/error');
+var Rank = require('../rank/rankModel');
 
 module.exports = {
     create: function (req, res) {
@@ -147,6 +148,21 @@ module.exports = {
                     else return res.status(200).json({ error: Error.deleteSuccess('User') });
                 });
             }
+        });
+    },
+    
+    updateRank: function(req, res){
+           WorkerUser.findByIdAndUpdate({ _id: req.params.id }, function (err, user) {
+                if (err) return res.status(500).json({ error: Error.unknownError });
+                else if (!user) res.status(404).json({ error: Error.notFound('User') });
+                else{
+                    if (user.totalpoints >= user.rank.maxpoints){
+                        Rank.findOne({ index: (user.rank.index + 1)}, function (err, rank) {
+                            if (err) return res.status(500).json({ error: Error.unknownError });
+                            else user.rank = rank});
+                    }
+
+                }
         });
     }
 };
