@@ -4,7 +4,7 @@ var Helper = require('./projectHelper');
 var mongoose = require('mongoose');
 
 exports.getAll = function(req, res) {
-    Project.find({}).populate('package').exec(function(err, projects) {
+    Project.find({}).populate('package').populate('images').exec(function(err, projects) {
         if (err) return res.status(500).json({ error: Error.unknownError });
         else return res.status(200).json({ projects });
     });
