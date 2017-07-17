@@ -23,7 +23,6 @@ exports.create = function(req, res) {
             if (err) {
                 return res.status(500).json({ error: Error.unknownError });
             } else {
-                console.log("newAnnotationObject", newAnnotationObject)
                 WorkerUser.findById(req.body.workerId).exec(function (err, workerUser) {
                     if (err) {
                         return res.status(500).json({ error: Error.unknownError });
@@ -35,7 +34,6 @@ exports.create = function(req, res) {
                             if (err) {
                                 return res.status(500).json({ error: Error.unknownError });
                             } else {
-                                console.log("updatedWorkerUser", updatedWorkerUser);
                                 Image.findById(req.body.imageId).exec(function (err, image) {
                                     if (err) {
                                         return res.status(500).json({ error: Error.unknownError });
@@ -47,7 +45,6 @@ exports.create = function(req, res) {
                                             if (err) {
                                                 return res.status(500).json({ error: Error.unknownError });
                                             } else {
-                                                console.log("updatedImage", updatedImage);
                                                 return res.status(200).send(newAnnotationObject);
                                             }
                                         })
