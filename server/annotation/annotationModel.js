@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 
 var annotationSchema = new Schema({
     labels: {
-        type: String
+        type: [Schema.ObjectId],
+        ref: 'Label'
     }
 });
 
