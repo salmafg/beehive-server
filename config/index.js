@@ -8,5 +8,6 @@ module.exports = {
     cookieExpiry: 2592000000,
     S3BucketName: 'beehive-img',
     projectPopulate: [{ path: 'images', model: 'Image' },
-    { path: 'package', model: 'Package' }]
+    { path: 'package', model: 'Package' }],
+    s3BasePath: "https://s3-us-west-2.amazonaws.com"
 };

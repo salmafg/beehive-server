@@ -1,6 +1,7 @@
 var Uploader = require('s3-image-uploader');
 var Image = require('./imageModel');
 var awsConfig = require('../../config/awsConfig');
+var config = require('../../config');
 
 var uploader = new Uploader({
   aws: {
@@ -12,24 +13,22 @@ var uploader = new Uploader({
 
 exports.create = function(imagePath, fileName, next) {
     var image = new Image();
-    console.log("imageController.create");
     image.save(function(err, image) {
         if (err) return next(err);
         else {
-            console.log("before uploader.upload");
             uploader.upload({
                 fileId: image._id,
                 bucket: awsConfig.bucketName,
                 source: imagePath,
                 name: image._id + "__" + fileName
             }, function(data) {
-                console.log('upload success:', data);
-                image.path = data.path;
+                console.log('AWS upload success:', data);
+                image.path = config.s3BasePath + data.path;
                 image.save(function(err, image) {
                     next(null, image._id);
                 });
             }, function(errMsg, errObject) {
-                console.error('unable to upload: ' + errMsg + ':', errObject);
+                console.error('AWS unable to upload: ' + errMsg + ':', errObject);
                 next(err);
             });
         }
