@@ -1,3 +1,4 @@
+var Image = require('../image/imageModel');
 var Project = require('./projectModel');
 var Error = require('../../config/error');
 var Helper = require('./projectHelper');
@@ -120,15 +121,17 @@ exports.delete = function(req, res) {
 exports.dispatch = function(req, res) {
     Project.aggregate({ $sample: {size:1} }, function(err, data) {
         if (err) {
-            return res.status(500).json({ error: Error.unknownError })
+            return res.status(500).json({ error: Error.unknownError });
         } else {
             var project;
             if (data.length > 0) {
-                project = data[0]
+                project = data[0];
+                Image.populate(project, { path: "images" }, function (err, project) {
+                    return res.status(200).send(project);
+                });
             } else {
                 return res.status(404).json({ error: Error.notFound('Project') });
             }
-            return res.status(200).json({project});
         }
-    })
-}
+    });
+};
