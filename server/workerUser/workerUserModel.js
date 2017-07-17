@@ -47,6 +47,10 @@ var workerUserSchema = new Schema({
         required: true,
         default: true
     },
+    annotations: {
+        type: Schema.ObjectId,
+        ref: 'Annotation'
+    },
     created: {
         type: Date,
         required: true,
