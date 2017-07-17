@@ -13,6 +13,7 @@ var packageRoutes = require('./server/package/packageRoutes');
 var projectRoutes = require('./server/project/projectRoutes');
 var rankRoutes = require('./server/rank/rankRoutes');
 var workerUserRoutes = require('./server/workerUser/workerUserRoutes');
+var annotationRoutes = require('./server/annotation/annotationRoutes');
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connect(config.dbUrl, config.dbOpts);
@@ -53,6 +54,7 @@ app.use('/worker', workerUserRoutes);
 app.use('/business', businessUserRoutes);
 app.use('/', projectRoutes);
 app.use('/business', packageRoutes);
+app.use('/annotation', annotationRoutes);
 
 var port = process.env.PORT || 3000;
 app.listen(port);
