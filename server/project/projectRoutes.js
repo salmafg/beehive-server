@@ -8,8 +8,8 @@ router.get('/', function(req, res) {
     res.send('Beehive');
 });
 
-//router.get('/projects', businessUser.isLoggedIn, businessUser.getAssociatedProjects);
-router.get('/projects/dispatch', project.dispatch)
+router.get('/projects', businessUser.isLoggedIn, businessUser.getAssociatedProjects);
+router.get('/projects/dispatch', project.dispatch);
 
 router.get('/projects/:id', businessUser.isLoggedIn, businessUser.getAssociatedProject);
 router.get('/projects/:pid/activities', businessUser.getProjectActivities);

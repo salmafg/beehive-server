@@ -4,6 +4,7 @@ var BusinessUser = require('./businessUserModel').model;
 var Project = require('../project/projectModel');
 var Activity = require('../activity/activityModel').model;
 var Error = require('../../config/error');
+var projectPopulate = require('../../config').projectPopulate;
 
 module.exports = {
     create: function (req, res) {
@@ -137,14 +138,14 @@ module.exports = {
             });
     },
     getAssociatedProjects: function (req, res) {
-        Project.find({ businessUser: req.user.id }).populate('package')
+        Project.find({ businessUser: req.user.id }).populate(projectPopulate)
         .exec(function(err, projects) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else return res.status(200).json({ projects });
         });
     },
     getAssociatedProject: function (req, res) {
-        Project.findOne({ businessUser: req.user.id, _id: req.params.id }).populate('package')
+        Project.findOne({ businessUser: req.user.id, _id: req.params.id }).populate(projectPopulate)
         .exec(function(err, project) {
             if (err) return res.status(500).json({ error: Error.unknownError });
             else if (!project) return res.status(404).json({ error: Error.notFound('Project') });

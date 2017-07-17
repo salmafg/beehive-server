@@ -2,16 +2,18 @@ var Project = require('./projectModel');
 var Error = require('../../config/error');
 var Helper = require('./projectHelper');
 var mongoose = require('mongoose');
+var projectPopulate = require('../../config').projectPopulate;
 
 exports.getAll = function(req, res) {
-    Project.find({}).populate('package').populate('images').exec(function(err, projects) {
+    Project.find({}).populate('package images').exec(function(err, projects) {
         if (err) return res.status(500).json({ error: Error.unknownError });
         else return res.status(200).json({ projects });
     });
 };
 
 exports.get = function(req, res) {
-    Project.findById(req.params.id).populate('package').exec(function (err, project) {
+    Project.findById(req.params.id).populate(projectPopulate)
+    .exec(function (err, project) {
         if (err)
             return res.status(500).json({ error: Error.unknownError });
         else if (project)
@@ -50,7 +52,7 @@ exports.create = function (req, res) {
                 Helper.uploadDataSet(req.body.images, project, function (err, project) {
                     if (err) return res.status(500).json({ error: err });
                     else {
-                        project.populate('package', function(err, project){
+                        project.populate(projectPopulate, function(err, project){
                             return res.status(200).send(project);
                         });
                     }
@@ -58,7 +60,7 @@ exports.create = function (req, res) {
             }
         }
         else {
-            project.populate('package', function(err, project){
+            project.populate(projectPopulate, function(err, project){
                 return res.status(200).send(project);
             });
         }
@@ -88,8 +90,11 @@ exports.update = function(req, res) {
                         return res.status(500).json({ error: err.message });
                     return res.status(500).json({ error: Error.unknownError });
                 }
-                else
-                    return res.status(200).json({project});
+                else {
+                    project.populate(projectPopulate, function(err, project){
+                        return res.status(200).send(project);
+                    });
+                }
             });
         }
     });
