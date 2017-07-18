@@ -20,7 +20,8 @@ var workerUserSchema = new Schema({
     },
     rank: {
         type: Schema.ObjectId,
-        ref: 'Rank'
+        ref: 'Rank',
+        default: Schema.ObjectId
     },
     credit: {
         type: Number,

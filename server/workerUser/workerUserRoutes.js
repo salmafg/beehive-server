@@ -23,7 +23,7 @@ router.delete('/users/:id', WorkerUser.delete);
 router.put('/users/:id/activate', WorkerUser.activate);
 
 
-router.put('/ranks/:id', WorkerUser.updateRank);
+router.put('/users/:id', WorkerUser.updateRank);
 
 router.put('/users/:id/deactivate', WorkerUser.deactivate);
 
