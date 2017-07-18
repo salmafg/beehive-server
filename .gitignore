@@ -61,3 +61,5 @@ typings/
 
 config/awsConfig.js
 images/
+
+*.DS_Store
