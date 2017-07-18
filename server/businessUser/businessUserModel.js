@@ -19,9 +19,6 @@ var businessUserSchema = new Schema({
     organization: {
         type: String
     },
-    message: {
-        type: String
-    },
     isActivated: {
         type: Boolean,
         required: true,
