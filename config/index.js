@@ -9,5 +9,6 @@ module.exports = {
     S3BucketName: 'beehive-img',
     projectPopulate: [{ path: 'images', model: 'Image' },
     { path: 'package', model: 'Package' }],
-    s3BasePath: "https://s3-us-west-2.amazonaws.com"
+    s3BasePath: "https://s3-us-west-2.amazonaws.com",
+    testDir: '/home/salma/Desktop/'
 };

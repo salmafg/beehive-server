@@ -1,3 +1,4 @@
+var dir = require('../../config').testDir;
 var Image = require('../image/imageModel');
 var ImageController = require('../image/imageController');
 var async = require('async');
@@ -21,6 +22,7 @@ var deleteFolderRecursive = function (path, next) {
 
 exports.uploadDataSet = function (read_path, project, callback) {
     var write_path = './images/' + project._id;
+    read_path = dir + read_path;
     async.waterfall([
         function (next) {
             if (!fs.existsSync('./images')) {
