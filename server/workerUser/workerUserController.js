@@ -20,7 +20,7 @@ module.exports = {
                             email: req.body.email.toLowerCase(),
                             password: req.body.password
                         });
-                        newWorkerUser.save(function (err, workerUser) {
+                        newWorkerUser.save(function (err, user) {
                             if (err) {
                                 if (err.name == 'ValidationError') {
                                     for (var field in err.errors)
@@ -29,7 +29,7 @@ module.exports = {
                                 if (err.message) return res.status(500).json({ error: err.message });
                                 return res.status(500).json({ error: Error.unknownError });
                             }
-                            else return res.status(201).json({ workerUser });
+                            else return res.status(201).json({ user });
                         });
                     }
                 });
